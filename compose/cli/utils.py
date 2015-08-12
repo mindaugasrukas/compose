@@ -9,6 +9,7 @@ import os
 import platform
 import subprocess
 import ssl
+from .docker_client import docker_client
 
 
 def yesno(prompt, default=None):
@@ -128,11 +129,13 @@ def is_ubuntu():
 
 def get_version_info(scope):
     versioninfo = 'docker-compose version: %s' % __version__
+    client = docker_client()
     if scope == 'compose':
         return versioninfo
     elif scope == 'full':
         return versioninfo + '\n' \
             + "docker-py version: %s\n" % docker_py_version \
+            + "Client API version: %s\n" % client.version \
             + "%s version: %s\n" % (platform.python_implementation(), platform.python_version()) \
             + "OpenSSL version: %s" % ssl.OPENSSL_VERSION
     else:
